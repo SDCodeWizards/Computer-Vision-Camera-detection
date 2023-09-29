@@ -2,6 +2,7 @@ import cv2 as cv
 import numpy as np
 import mediapipe as mp
 
+
 # Initialize MediaPipe Hands model
 mp_hands = mp.solutions.hands
 hands = mp_hands.Hands()
@@ -23,7 +24,7 @@ while True:
     results = hands.process(rgb_frame)
 
     if results.multi_hand_landmarks:
-        # Draw landmarks on the frame
+        # Draw landmarks on the frame(green dots) 
         for landmarks in results.multi_hand_landmarks:
             for point in landmarks.landmark:
                 x, y = int(point.x * frame.shape[1]), int(point.y * frame.shape[0])
