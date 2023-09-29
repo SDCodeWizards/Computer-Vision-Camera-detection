@@ -3,6 +3,9 @@
 ## How to install open-cv2 library ##
 ```
 pip install opencv-python
+pip install mediapipe
+pip install opencv-python-headless numpy
+pip install numpy
 ```
 
 Then you can import libary with 
