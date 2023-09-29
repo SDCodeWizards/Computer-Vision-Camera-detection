@@ -15,11 +15,12 @@ use the find_cv2_path.py file to find your installed cv2 location, Then create a
 This file will adjust your visual studio code's settings.
 
 Write the settings below:
-'''
+```
 {
     "python.autoComplete.addBrackets": true,
     "python.analysis.autoSearchPaths": true,
     "python.analysis.extraPaths": ["path/to/your/opencv/python/library"]
 }
-'''
+
+```
 make sure to insert the path that you find in the cv2 location python file into the python.analysis.extraPaths parameter replacing the string.
