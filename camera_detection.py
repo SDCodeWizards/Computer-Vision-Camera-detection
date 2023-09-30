@@ -44,23 +44,17 @@ with GestureRecognizer.create_from_options(options) as recognizer:
         # The detector is initialized. Use it here.
         gesture_recognition_result = recognizer.recognize(mp_rgb_frame)
         if gesture_recognition_result.gestures and gesture_recognition_result.gestures[0]:
-            
+
             posture = gesture_recognition_result.gestures[0][0].category_name
             cv.putText(frame, posture, (100,100), cv.FONT_HERSHEY_SIMPLEX, 1,(255, 0, 0), 3, cv.LINE_AA)
 
             handness = gesture_recognition_result.handedness[0][0].category_name
             cv.putText(frame, handness, (300,100), cv.FONT_HERSHEY_SIMPLEX, 1,(255, 0, 255), 3, cv.LINE_AA)
 
-
-        # Detect hands in the frame
-        results = hands.process(rgb_frame)
-
-        if results.multi_hand_landmarks:
             # Draw landmarks on the frame(green dots) 
-            for landmarks in results.multi_hand_landmarks:
-                for point in landmarks.landmark:
-                    x, y = int(point.x * frame.shape[1]), int(point.y * frame.shape[0])
-                    cv.circle(frame, (x, y), 5, (0, 255, 0), -1)
+            for landmarks in gesture_recognition_result.hand_landmarks[0]:
+                x, y = int(landmarks.x * frame.shape[1]), int(landmarks.y * frame.shape[0])
+                cv.circle(frame, (x, y), 5, (0, 255, 0), -1)
 
         # Display the frame with imshow.
         cv.imshow("Camera Feed", frame)
