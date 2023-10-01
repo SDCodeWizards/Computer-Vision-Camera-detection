@@ -24,7 +24,7 @@ options = ObjectDetectorOptions(
 
 
 # Variables
-score_threshold = 0.60 # Speicifies how much accuracy for the ML prediction.
+score_threshold = 0.55 # Speicifies how much accuracy for the ML prediction.
 frame_counter = 0 # For how many frame per calculations.
 box_counter = 0 # Counts how many boxes are drawn on screen
 box_location = [] # Stores as (initial_x, initial_y, final_x, final_y, name_of_prediction)
@@ -41,30 +41,30 @@ with ObjectDetector.create_from_options(options) as detector:
         else:
             print("Help yourself, contact us")
             os.abort()
-
-
     except:
         print("Default Camera is currently invalid")
 
     while True:
         
+        c.set(cv.CAP_PROP_FRAME_WIDTH, 1280)
+        c.set(cv.CAP_PROP_FRAME_HEIGHT, 720)
+
         # Capture each frame within the camera
         ret, frame = c.read()
-
         # Convert the frame to RGB for hand detection
         rgb_frame = cv.cvtColor(frame, cv.COLOR_BGR2RGB)
 
         # Load the input image from a numpy array.
         mp_image = mp.Image(image_format=mp.ImageFormat.SRGB, data=rgb_frame)
 
+        # Count on frames
         if frame_counter == frame_setter:
             detection_result = detector.detect(mp_image)
             frame_counter = 0
-            #BUG? Potential bugs here fore only showing a singular in categories??
             box_location = []
             for detection in detection_result.detections:
                 # Make sure they are above the scoring threshold
-                if detection.categories[0].score > score_threshold:
+                if detection.categories[0].score >= score_threshold:
                     a = detection.bounding_box.origin_x
                     b = detection.bounding_box.origin_y
                     box_counter += 1
@@ -74,7 +74,7 @@ with ObjectDetector.create_from_options(options) as detector:
         # Draw:
         for points in box_location:
             cv.rectangle(frame, (points[0], points[1]),(points[2],points[3]), (255,0,0), 1)
-            cv.putText(frame, points[4], (points[0],points[1]), cv.FONT_HERSHEY_SIMPLEX, 1, (255,0,0), 2, cv.LINE_AA)
+            cv.putText(frame, points[4], (int((points[0]+points[2])/2),int((points[1]+points[3])/2)), cv.FONT_HERSHEY_SIMPLEX, 1, (255,255,0), 2, cv.LINE_AA)
 
         # Display the frame with imshow.
         cv.imshow("Camera Feed", frame)
