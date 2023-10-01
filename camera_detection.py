@@ -15,8 +15,7 @@ except:
 while True:
     # Capture each frame within the camera
     ret, frame = c.read()
-
-
+    
     # Convert the frame to RGB for hand detection
     rgb_frame = cv.cvtColor(frame, cv.COLOR_BGR2RGB)
 
