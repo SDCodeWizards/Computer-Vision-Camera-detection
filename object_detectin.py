@@ -9,7 +9,7 @@ import os
 import platform 
 
 
-model_path = str(pathlib.Path(__file__).parent.resolve()) + "/model/efficientdet_lite0.tflite"
+model_path = str(pathlib.Path(__file__).parent.resolve()) + "utils/model/efficientdet_lite0.tflite"
 
 # Create a task:
 BaseOptions = mp.tasks.BaseOptions
