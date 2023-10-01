@@ -43,6 +43,7 @@ while True:
     cv.imshow("Camera Feed", frame)
 
 
+
 # Stop the images showing after q pressed:
     if cv.waitKey(1) & 0xFF == ord("q"):
         break
