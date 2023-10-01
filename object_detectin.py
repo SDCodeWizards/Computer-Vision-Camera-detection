@@ -5,6 +5,9 @@ from mediapipe.tasks import python
 from mediapipe.tasks.python import vision
 import pathlib
 
+import os
+import platform 
+
 
 model_path = str(pathlib.Path(__file__).parent.resolve()) + "/model/efficientdet_lite0.tflite"
 
@@ -31,7 +34,15 @@ frame_setter = 15 # Set how many frames
 
 with ObjectDetector.create_from_options(options) as detector:
     try:
-        c = cv.VideoCapture(0, cv.CAP_AVFOUNDATION) # Capture the default camera
+        if platform.system() == 'Windows':
+            c = cv.VideoCapture(0) # Capture the default camera
+        elif platform.system() == "Darwin":
+            c = cv.VideoCapture(0, cv.CAP_AVFOUNDATION) # Capture the default camera
+        else:
+            print("Help yourself, contact us")
+            os.abort()
+
+
     except:
         print("Default Camera is currently invalid")
 
