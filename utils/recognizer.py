@@ -1,3 +1,4 @@
+# comment
 import mediapipe as mp
 import pathlib
 
@@ -14,5 +15,6 @@ def recognizer():
         base_options=BaseOptions(model_asset_path=model_path),
         running_mode=VisionRunningMode.IMAGE)
     recognizer = GestureRecognizer.create_from_options(options)
+    
 
     return recognizer
