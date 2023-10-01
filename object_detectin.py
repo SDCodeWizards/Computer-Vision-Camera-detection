@@ -3,9 +3,10 @@ import numpy as np
 import mediapipe as mp
 from mediapipe.tasks import python
 from mediapipe.tasks.python import vision
+import pathlib
 
-model_path = 'model\efficientdet_lite0.tflite'
 
+model_path = str(pathlib.Path(__file__).parent.resolve()) + "/model/efficientdet_lite0.tflite"
 
 # Create a task:
 BaseOptions = mp.tasks.BaseOptions
@@ -30,7 +31,7 @@ frame_setter = 15 # Set how many frames
 
 with ObjectDetector.create_from_options(options) as detector:
     try:
-        c = cv.VideoCapture(0) # Capture the default camera
+        c = cv.VideoCapture(0, cv.CAP_AVFOUNDATION) # Capture the default camera
     except:
         print("Default Camera is currently invalid")
 
