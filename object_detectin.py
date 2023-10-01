@@ -9,7 +9,7 @@ import os
 import platform 
 
 
-model_path = str(pathlib.Path(__file__).parent.resolve()) + "utils/model/efficientdet_lite0.tflite"
+model_path = str(pathlib.Path(__file__).parent.resolve()) + "/utils/model/efficientdet_lite0.tflite"
 
 # Create a task:
 BaseOptions = mp.tasks.BaseOptions
@@ -28,8 +28,8 @@ score_threshold = 0.60 # Speicifies how much accuracy for the ML prediction.
 frame_counter = 0 # For how many frame per calculations.
 box_counter = 0 # Counts how many boxes are drawn on screen
 box_location = [] # Stores as (initial_x, initial_y, final_x, final_y, name_of_prediction)
-total_box_amounts = 5 # Amount on how many boxes to display on screen.
-frame_setter = 15 # Set how many frames 
+total_box_amounts = 1 # Amount on how many boxes to display on screen.
+frame_setter = 30 # Set how many frames 
 
 
 with ObjectDetector.create_from_options(options) as detector:
@@ -57,22 +57,19 @@ with ObjectDetector.create_from_options(options) as detector:
         # Load the input image from a numpy array.
         mp_image = mp.Image(image_format=mp.ImageFormat.SRGB, data=rgb_frame)
 
-        if frame_counter == 30:
+        if frame_counter == frame_setter:
             detection_result = detector.detect(mp_image)
             frame_counter = 0
             #BUG? Potential bugs here fore only showing a singular in categories??
+            box_location = []
             for detection in detection_result.detections:
                 # Make sure they are above the scoring threshold
                 if detection.categories[0].score > score_threshold:
                     a = detection.bounding_box.origin_x
                     b = detection.bounding_box.origin_y
                     box_counter += 1
-                    #Clear boxes after total_box_amounts
-                    if box_counter == total_box_amounts:
-                        box_location = []
-                        box_counter = 0
                     # Append all detected information and append them into an array.
-                    box_location.append((a,b,a+detection.bounding_box.width, b+detection.bounding_box.height, detection.categories[0].category_name))                    
+                    box_location.append((a,b,a+detection.bounding_box.width, b+detection.bounding_box.height, detection.categories[0].category_name))
 
         # Draw:
         for points in box_location:
