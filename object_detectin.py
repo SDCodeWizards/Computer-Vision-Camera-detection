@@ -4,7 +4,7 @@ import mediapipe as mp
 from mediapipe.tasks import python
 from mediapipe.tasks.python import vision
 
-model_path = 'E:\Code\Github\Computer-Vision-Camera-detection\model\efficientdet_lite0.tflite'
+model_path = 'model\efficientdet_lite0.tflite'
 
 
 # Create a task:
@@ -21,10 +21,12 @@ options = ObjectDetectorOptions(
 
 # Variables
 score_threshold = 0.60 # Speicifies how much accuracy for the ML prediction.
-frame_counter = 0
-box_counter = 0
-box_location = []
+frame_counter = 0 # For how many frame per calculations.
+box_counter = 0 # Counts how many boxes are drawn on screen
+box_location = [] # Stores as (initial_x, initial_y, final_x, final_y, name_of_prediction)
 total_box_amounts = 5 # Amount on how many boxes to display on screen.
+frame_setter = 15 # Set how many frames 
+
 
 with ObjectDetector.create_from_options(options) as detector:
     try:
