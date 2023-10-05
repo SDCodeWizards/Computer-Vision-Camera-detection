@@ -37,7 +37,7 @@ with ObjectDetector.create_from_options(options) as detector:
         if platform.system() == 'Windows':
             c = cv.VideoCapture(0) # Capture the default camera
         elif platform.system() == "Darwin":
-            c = cv.VideoCapture(0, cv.CAP_AVFOUNDATION) # Capture the default camera
+            c = cv.VideoCapture(1, cv.CAP_AVFOUNDATION) # Capture the default camera
         else:
             print("Help yourself, contact us")
             os.abort()

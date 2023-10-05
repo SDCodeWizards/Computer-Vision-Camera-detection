@@ -8,11 +8,17 @@ from utils import recognizer
 # Initialize MediaPipe Hands model
 recognizer = recognizer.recognizer()
 
-try:
-    c = cv.VideoCapture(0) # Capture the default camera
-except:
-    print("Default Camera is currently invalid")
-
+word = input("put the path of vedio, or just word 'camera':")
+if word == "camera":
+    try:
+        c = cv.VideoCapture(0, cv.CAP_AVFOUNDATION) # Capture the default camera
+    except:
+        print("Default Camera is currently invalid")
+else:
+    try:
+        c = cv.VideoCapture(word)
+    except:
+        print("Path is invalid")
 
 while True:
     # Capture each frame within the camera
