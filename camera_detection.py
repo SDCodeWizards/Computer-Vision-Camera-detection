@@ -2,11 +2,14 @@ import cv2 as cv
 import numpy as np
 import mediapipe as mp
 from utils import recognizer
+from vidgear.gears import CamGear
 
 
 
 # Initialize MediaPipe Hands model
 recognizer = recognizer.recognizer()
+
+stream = False
 
 word = input("put the path of vedio, or just word 'camera':")
 if word == "camera":
@@ -14,18 +17,24 @@ if word == "camera":
         c = cv.VideoCapture(0, cv.CAP_AVFOUNDATION) # Capture the default camera
     except:
         print("Default Camera is currently invalid")
+elif word[0:6] == 'https:':
+    c = CamGear(source='https://youtu.be/942WxIbXupw', stream_mode = True, logging=True).start()
+    stream = True
 else:
     try:
         c = cv.VideoCapture(word)
     except:
-        print("Path is invalid")
+        print("invalid path")
 
 while True:
     # Capture each frame within the camera
-    ret, frame = c.read()
-    if not ret:
-        print("Can't receive frame (stream end?). Exiting ...")
-        break
+    if stream:
+        frame = c.read()
+    else:
+        ret, frame = c.read()
+        if not ret:
+            print("Can't receive frame (stream end?). Exiting ...")
+            break
 
     # Convert the frame to RGB for hand detection
     rgb_frame = cv.cvtColor(frame, cv.COLOR_BGR2RGB)
@@ -55,5 +64,8 @@ while True:
         break
     
 # Release camera and close all opencv windows.
-c.release()
+if stream:
+    c.stop()
+else:
+    c.release()
 cv.destroyAllWindows()
