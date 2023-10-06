@@ -2,7 +2,7 @@ import cv2 as cv
 import numpy as np
 import mediapipe as mp
 from utils import recognizer
-
+from utils.settings import *
 
 
 # Initialize MediaPipe Hands model
