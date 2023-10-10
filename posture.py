@@ -29,7 +29,6 @@ while True:
 
     # implement frame settings:
     if frame_counter == frame_setter:
-        cycle = True
         frame_counter = 0
         gesture_recognition_result = recognizer.recognize(mp_rgb_frame)
         if gesture_recognition_result.gestures and gesture_recognition_result.gestures[0]:
@@ -38,16 +37,13 @@ while True:
             posture = gesture_recognition_result.gestures[0][0].category_name
             handness = gesture_recognition_result.handedness[0][0].category_name
 
+            # cv.putText(frame, posture, (100,100), cv.FONT_HERSHEY_SIMPLEX, 1,(255, 0, 0), 3, cv.LINE_AA)
+            # cv.putText(frame, handness, (300,100), cv.FONT_HERSHEY_SIMPLEX, 1,(255, 0, 255), 3, cv.LINE_AA)
 
-
-    if cycle:
-        cv.putText(frame, posture, (100,100), cv.FONT_HERSHEY_SIMPLEX, 1,(255, 0, 0), 3, cv.LINE_AA)
-        cv.putText(frame, handness, (300,100), cv.FONT_HERSHEY_SIMPLEX, 1,(255, 0, 255), 3, cv.LINE_AA)
-
-        # Draw landmarks on the frame(green dots) 
-        for landmarks in gesture_recognition_result.hand_landmarks[0]:
-            x, y = int(landmarks.x * frame.shape[1]), int(landmarks.y * frame.shape[0])
-            cv.circle(frame, (x, y), 5, (0, 255, 0), -1)
+            # Draw landmarks on the frame(green dots) 
+            # for landmarks in gesture_recognition_result.hand_landmarks[0]:
+            #     x, y = int(landmarks.x * frame.shape[1]), int(landmarks.y * frame.shape[0])
+            #     cv.circle(frame, (x, y), 5, (0, 255, 0), -1)
 
     frame_counter += 1
 
