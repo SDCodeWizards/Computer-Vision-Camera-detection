@@ -4,6 +4,7 @@ from PyQt5 import QtCore  # Import QtCore module
 
 # Variable to track the camera status
 camera_hidden = False
+dark_mode_checker = False
 
 # Function to toggle the camera status
 def toggle_camera():
@@ -23,6 +24,19 @@ def select_folder():
 def minimize_to_tray():
     main_window.hide()
     tray_icon.show()
+
+# Function allowes the use of dark mode:
+def dark_mode_function():
+    global dark_mode_checker
+    if dark_mode_checker:
+        with open("utils/style.css", "r") as css_file:
+            css = css_file.read()
+        dark_mode_checker = False
+    else:
+        with open("utils/dark.css", "r") as css_file:
+            css = css_file.read()
+        dark_mode_checker = True
+    app.setStyleSheet(css)
 
 # Function to show the Help window
 def show_help():
@@ -50,8 +64,11 @@ main_window.setWindowTitle("Video Recording App")
 # Set the background color of the main window
 # main_window.setStyleSheet("background-color: #333;")  # Use your preferred background color
 
-with open("utils/style.css", "r") as css_file:
-    css = css_file.read()
+try:
+    with open("utils/style.css", "r") as css_file:
+        css = css_file.read()
+except Exception as e:
+    print(f"Error loading CSS: {str(e)}")
 
 app.setStyleSheet(css)
 
@@ -81,6 +98,9 @@ hide_button.clicked.connect(minimize_to_tray)
 help_button = QPushButton("Help", central_widget)
 help_button.clicked.connect(show_help)
 
+dark_mode = QPushButton("Dark Mode", central_widget)
+dark_mode.clicked.connect(dark_mode_function)
+
 # Create a horizontal layout for FPS and resolution input fields
 settings_layout = QHBoxLayout()
 
@@ -109,7 +129,9 @@ layout.addWidget(folder_button)
 layout.addWidget(toggle_camera_button)
 layout.addLayout(settings_layout)
 layout.addWidget(help_button)
+layout.addWidget(dark_mode)
 layout.addWidget(hide_button)
+
 
 # Set the window size and disable full-screen
 main_window.setFixedSize(400, 350)
