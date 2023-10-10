@@ -2,7 +2,7 @@ import sys
 import os
 import pystray
 from PIL import Image
-from PyQt5.QtWidgets import QApplication, QMainWindow, QLabel, QPushButton, QFileDialog, QLineEdit, QVBoxLayout, QWidget, QHBoxLayout
+from PyQt5.QtWidgets import QApplication, QMainWindow, QLabel, QPushButton, QFileDialog, QLineEdit, QVBoxLayout, QWidget, QHBoxLayout, QTextEdit, QDialog
 from PyQt5 import QtCore  # Import QtCore module
 
 # Variable to track the camera status
@@ -29,6 +29,25 @@ def hide_application():
     menu = pystray.Menu(pystray.MenuItem('Open', lambda: main_window.show()), pystray.MenuItem('Exit', lambda: sys.exit()))
     icon = pystray.Icon("name", image, menu=menu)
     icon.run()
+
+# Function to show the Help window
+def show_help():
+    help_window = QDialog(main_window)
+    help_window.setWindowTitle("Help")
+    help_window.setGeometry(200, 200, 400, 300)
+    
+    help_text = QTextEdit("This is the help text. You can add your help information here.")
+    help_text.setReadOnly(True)
+    
+    close_button = QPushButton("Close", help_window)
+    close_button.clicked.connect(help_window.close)
+    
+    layout = QVBoxLayout()
+    layout.addWidget(help_text)
+    layout.addWidget(close_button)
+    
+    help_window.setLayout(layout)
+    help_window.exec_()
 
 app = QApplication(sys.argv)
 main_window = QMainWindow()
@@ -57,6 +76,9 @@ toggle_camera_button.clicked.connect(toggle_camera)
 hide_button = QPushButton("Hide Application", central_widget)
 hide_button.clicked.connect(hide_application)
 
+help_button = QPushButton("Help", central_widget)
+help_button.clicked.connect(show_help)  # Connect the Help button to the show_help function
+
 # Create a horizontal layout for FPS and resolution input fields
 settings_layout = QHBoxLayout()
 
@@ -79,11 +101,12 @@ settings_layout.addWidget(x_label)
 settings_layout.addWidget(height_input)
 
 # Add widgets to the layout
-layout.addWidget(camera_status_label)
 layout.addWidget(folder_path_label)
+layout.addWidget(camera_status_label)
 layout.addWidget(folder_button)
 layout.addWidget(toggle_camera_button)
 layout.addLayout(settings_layout)  # Add the settings layout with FPS and resolution inputs
+layout.addWidget(help_button)  # Add the Help button
 layout.addWidget(hide_button)
 
 # Set the window size
