@@ -2,3 +2,5 @@
 .vscode/settings.json
 utils/__pycache__/variables.cpython-311.pyc
 utils/__pycache__/settings.cpython-311.pyc
+output.avi
+utils/__pycache__/recognizer.cpython-311.pyc
