@@ -1,11 +1,13 @@
 # Computer-Vision #
 
-## How to install open-cv2 library ##
+## How to install all the nessiary packages for develop this software ##
 ```
 pip install opencv-python
 pip install mediapipe
 pip install opencv-python-headless numpy
 pip install numpy
+python3 -m pip install git+https://github.com/RedFantom/ttkthemes
+python3 -m pip install pystray
 ```
 
 Then you can import libary with 
