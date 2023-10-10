@@ -1,8 +1,5 @@
 import sys
-import os
-import pystray
-from PIL import Image
-from PyQt5.QtWidgets import QApplication, QMainWindow, QLabel, QPushButton, QFileDialog, QLineEdit, QVBoxLayout, QWidget, QHBoxLayout, QTextEdit, QDialog
+from PyQt5.QtWidgets import QApplication, QMainWindow, QLabel, QPushButton, QFileDialog, QLineEdit, QVBoxLayout, QWidget, QHBoxLayout, QTextEdit, QSystemTrayIcon, QMenu, QDialog
 from PyQt5 import QtCore  # Import QtCore module
 
 # Variable to track the camera status
@@ -22,13 +19,10 @@ def select_folder():
     if folder_path:
         folder_path_label.setText("Selected Folder: " + folder_path)
 
-# Function to hide the application to the system tray
-def hide_application():
+# Function to minimize the application to the system tray
+def minimize_to_tray():
     main_window.hide()
-    image = Image.open("custom_icon.png")  # Replace with your custom icon path
-    menu = pystray.Menu(pystray.MenuItem('Open', lambda: main_window.show()), pystray.MenuItem('Exit', lambda: sys.exit()))
-    icon = pystray.Icon("name", image, menu=menu)
-    icon.run()
+    tray_icon.show()
 
 # Function to show the Help window
 def show_help():
@@ -53,13 +47,21 @@ app = QApplication(sys.argv)
 main_window = QMainWindow()
 main_window.setWindowTitle("Video Recording App")
 
+# Set the background color of the main window
+# main_window.setStyleSheet("background-color: #333;")  # Use your preferred background color
+
+with open("utils/style.css", "r") as css_file:
+    css = css_file.read()
+
+app.setStyleSheet(css)
+
 # Create central widget
 central_widget = QWidget(main_window)
 main_window.setCentralWidget(central_widget)
 
 # Create layout for central widget
 layout = QVBoxLayout()
-layout.setAlignment(QtCore.Qt.AlignTop)  # Set alignment to top
+layout.setAlignment(QtCore.Qt.AlignTop)
 central_widget.setLayout(layout)
 
 # Create and configure labels
@@ -74,10 +76,10 @@ toggle_camera_button = QPushButton("Toggle Camera", central_widget)
 toggle_camera_button.clicked.connect(toggle_camera)
 
 hide_button = QPushButton("Hide Application", central_widget)
-hide_button.clicked.connect(hide_application)
+hide_button.clicked.connect(minimize_to_tray)
 
 help_button = QPushButton("Help", central_widget)
-help_button.clicked.connect(show_help)  # Connect the Help button to the show_help function
+help_button.clicked.connect(show_help)
 
 # Create a horizontal layout for FPS and resolution input fields
 settings_layout = QHBoxLayout()
@@ -101,16 +103,31 @@ settings_layout.addWidget(x_label)
 settings_layout.addWidget(height_input)
 
 # Add widgets to the layout
-layout.addWidget(folder_path_label)
 layout.addWidget(camera_status_label)
+layout.addWidget(folder_path_label)
 layout.addWidget(folder_button)
 layout.addWidget(toggle_camera_button)
-layout.addLayout(settings_layout)  # Add the settings layout with FPS and resolution inputs
-layout.addWidget(help_button)  # Add the Help button
+layout.addLayout(settings_layout)
+layout.addWidget(help_button)
 layout.addWidget(hide_button)
 
-# Set the window size
-main_window.setGeometry(100, 100, 400, 350)
+# Set the window size and disable full-screen
+main_window.setFixedSize(400, 350)
+
+# Create a system tray icon
+tray_icon = QSystemTrayIcon(main_window)
+tray_icon.setIcon(main_window.windowIcon())
+tray_icon.setVisible(True)
+
+# Create a context menu for the tray icon
+tray_menu = QMenu()
+open_action = tray_menu.addAction("Open")
+exit_action = tray_menu.addAction("Exit")
+tray_icon.setContextMenu(tray_menu)
+
+# Connect actions to functions
+open_action.triggered.connect(main_window.showNormal)
+exit_action.triggered.connect(sys.exit)
 
 main_window.show()
 
