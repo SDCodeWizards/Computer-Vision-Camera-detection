@@ -29,3 +29,23 @@ Write the settings below:
 
 ```
 make sure to insert the path that you find in the cv2 location python file into the python.analysis.extraPaths parameter replacing the string.
+
+## Full files structure:
+project_folder/
+|-- main.py
+|-- utils/
+|   |-- __init__.py
+|   |-- backend.py
+|   |-- gui.py
+|   |-- graphics/
+|   |   |-- __init__.py
+|   |   |-- camera.png
+|   |   |-- dark.css
+|   |   |-- style.css
+|   |-- model/
+|   |   |-- efficientdet_lite0.tflite
+|   |   |-- gesture_recognizer.task
+|   |-- tools/
+|   |   |-- recognizer.py
+|   |   |-- settings.py
+|   |   |-- variables.py
