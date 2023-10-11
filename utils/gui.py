@@ -2,11 +2,18 @@ import sys
 from PyQt5.QtWidgets import QApplication, QMainWindow, QLabel, QPushButton, QFileDialog, QLineEdit, QVBoxLayout, QWidget, QHBoxLayout, QTextEdit, QSystemTrayIcon, QMenu, QDialog
 from PyQt5 import QtCore, QtGui
 from PyQt5.QtGui import QIcon
+from PyQt5.QtWidgets import QApplication, QMainWindow, QComboBox
 
 class GUI(QMainWindow):
     def __init__(self, backend):
+        # Variables:
         self.camera_hidden = False
         self.dark_mode_checker = False
+
+        # Parameter for backend function:
+        self.folder_path = ""
+        self.posture = ""
+
         super().__init__()
         self.backend = backend
         self.init_ui()
@@ -14,8 +21,8 @@ class GUI(QMainWindow):
     def init_ui(self):
         with open("utils/graphics/style.css", "r") as css_file:
             css = css_file.read()
-
         self.setStyleSheet(css)
+        
         self.setWindowTitle("Posture Recording")
         self.setGeometry(100, 100, 400, 300)
 
@@ -34,8 +41,8 @@ class GUI(QMainWindow):
         toggle_camera_button = QPushButton("Toggle Camera", main_widget)
         toggle_camera_button.clicked.connect(self.toggle_camera)
 
-        hide_button = QPushButton("Hide Application", main_widget)
-        hide_button.clicked.connect(self.minimize_to_tray)
+        hide_button = QPushButton("Start and Hide Application", main_widget)
+        hide_button.clicked.connect(self.submit)
 
         help_button = QPushButton("Help", main_widget)
         help_button.clicked.connect(self.show_help)
@@ -45,21 +52,36 @@ class GUI(QMainWindow):
 
         settings_layout = QHBoxLayout()
 
-        fps_label = QLabel("FPS:", main_widget)
-        self.fps_input = QLineEdit(main_widget)
+        self.posture_label = QLabel("Set Posture to start/stop the recording", main_widget)
+        self.posture_combobox = QComboBox(self)
+        self.posture_combobox.addItem("Victory")
+        self.posture_combobox.addItem("Thumbs Up")
+        self.posture_combobox.addItem("Thumbs Down")
+        self.posture_combobox.addItem("Closed Fist")
+        self.posture_combobox.addItem("Opened Palm")
+        
 
-        resolution_label = QLabel("Resolution:", main_widget)
-        self.width_input = QLineEdit(main_widget)
-        x_label = QLabel("x", main_widget)
-        self.height_input = QLineEdit(main_widget)
+        self.posture_combobox.activated[str].connect(self.on_posture_selected)
 
-        settings_layout.addWidget(fps_label)
-        settings_layout.addWidget(self.fps_input)
-        settings_layout.addWidget(resolution_label)
-        settings_layout.addWidget(self.width_input)
-        settings_layout.addWidget(x_label)
-        settings_layout.addWidget(self.height_input)
+        # Remove these settings for now:
 
+        # fps_label = QLabel("FPS:", main_widget)
+        # self.fps_input = QLineEdit(main_widget)
+
+        # resolution_label = QLabel("Resolution:", main_widget)
+        # self.width_input = QLineEdit(main_widget)
+        # x_label = QLabel("x", main_widget)
+        # self.height_input = QLineEdit(main_widget)
+
+        # settings_layout.addWidget(fps_label)
+        # settings_layout.addWidget(self.fps_input)
+        # settings_layout.addWidget(resolution_label)
+        # settings_layout.addWidget(self.width_input)
+        # settings_layout.addWidget(x_label)
+        # settings_layout.addWidget(self.height_input)
+
+        layout.addWidget(self.posture_label)
+        layout.addWidget(self.posture_combobox)
         layout.addWidget(self.camera_status_label)
         layout.addWidget(self.folder_path_label)
         layout.addWidget(folder_button)
@@ -71,17 +93,17 @@ class GUI(QMainWindow):
 
         self.setFixedSize(400, 350)
 
-        tray_icon = QSystemTrayIcon(self)
-        tray_icon.setIcon(self.windowIcon())
-        tray_icon.setVisible(True)
+        # Tray settings:
 
-        tray_menu = QMenu()
-        open_action = tray_menu.addAction("Open")
-        exit_action = tray_menu.addAction("Exit")
-        tray_icon.setContextMenu(tray_menu)
-
-        open_action.triggered.connect(self.showNormal)
-        exit_action.triggered.connect(sys.exit)
+        # tray_icon = QSystemTrayIcon(self)
+        # tray_icon.setIcon(self.windowIcon())
+        # tray_icon.setVisible(True)
+        # tray_menu = QMenu()
+        # open_action = tray_menu.addAction("Open")
+        # exit_action = tray_menu.addAction("Exit")
+        # tray_icon.setContextMenu(tray_menu)
+        # open_action.triggered.connect(self.showNormal)
+        # exit_action.triggered.connect(sys.exit)
 
         self.show()
 
@@ -89,10 +111,7 @@ class GUI(QMainWindow):
         folder_path = QFileDialog.getExistingDirectory()
         if folder_path:
             self.folder_path_label.setText("Selected Folder: " + folder_path)
-
-    # def toggle_camera(self):
-    #     # self.backend.capture_frames()
-    #     pass
+            self.folder_path = folder_path
 
     def toggle_camera(self):
         self.camera_hidden = not self.camera_hidden
@@ -101,14 +120,19 @@ class GUI(QMainWindow):
         else:
             self.camera_status_label.setText("Camera Status: Visible")
 
+    def on_posture_selected(self):
+        self.posture = self.posture_combobox.currentText()
 
-
-    def minimize_to_tray(self):
+    def submit(self):
+        # Hide application
         self.hide()
+        # Call camera function:
+        self.backend.capture_frames(self.posture, not self.camera_hidden, self.folder_path)
+        # Close application after captured posture:
+        QApplication.quit()
 
     # Function allowes the use of dark mode:
     def dark_mode_function(self):
-        global dark_mode_checker
         if self.dark_mode_checker:
             with open("utils/graphics/style.css", "r") as css_file:
                 css = css_file.read()

@@ -7,13 +7,13 @@ class Backend:
     def __init__(self):
         self.recognizer = recognizer()
         self.frame_counter = 0
-        self.posture = ""
+        self.posture = "inv"
         self.handness = ""
 
-    def capture_frames(self):
+    def capture_frames(self, posture_, cam_on, destination):
         self.camera = cv.VideoCapture(0, cv.CAP_DSHOW)
         self.camera.set(cv.CAP_PROP_FPS, FPS)
-        self.out = cv.VideoWriter('output.avi', cv.VideoWriter_fourcc(*'XVID'), FPS, (640, 480))
+        self.out = cv.VideoWriter(destination + 'output.avi', cv.VideoWriter_fourcc(*'XVID'), FPS, (640, 480))
         while True:
             ret, frame = self.camera.read()
             if not ret:
@@ -39,7 +39,10 @@ class Backend:
             self.out.write(frame)
             if cv.waitKey(1) & 0xFF == ord("q"):
                 break
-            if self.posture == "Victory":
+            if cam_on:
+                # Display the frame with imshow.
+                cv.imshow("Camera Feed", frame)
+            if self.posture == posture_:
                 break
 
         self.camera.release()
