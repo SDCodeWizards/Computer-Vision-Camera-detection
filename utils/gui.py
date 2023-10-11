@@ -54,6 +54,7 @@ class GUI(QMainWindow):
 
         self.posture_label = QLabel("Set Posture to start/stop the recording", main_widget)
         self.posture_combobox = QComboBox(self)
+        self.posture_combobox.addItem("no posture")
         self.posture_combobox.addItem("Victory")
         self.posture_combobox.addItem("Thumbs Up")
         self.posture_combobox.addItem("Thumbs Down")
