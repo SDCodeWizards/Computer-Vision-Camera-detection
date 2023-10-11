@@ -12,7 +12,9 @@ class GUI(QMainWindow):
 
         # Parameter for backend function:
         self.folder_path = ""
-        self.posture = ""
+        self.on_posture = "None"
+        self.off_posture = "None"
+        
 
         super().__init__()
         self.backend = backend
@@ -52,17 +54,29 @@ class GUI(QMainWindow):
 
         settings_layout = QHBoxLayout()
 
-        self.posture_label = QLabel("Set Posture to start/stop the recording", main_widget)
-        self.posture_combobox = QComboBox(self)
-        self.posture_combobox.addItem("no posture")
-        self.posture_combobox.addItem("Victory")
-        self.posture_combobox.addItem("Thumbs Up")
-        self.posture_combobox.addItem("Thumbs Down")
-        self.posture_combobox.addItem("Closed Fist")
-        self.posture_combobox.addItem("Opened Palm")
+        # Start postures
+        self.on_posture_label = QLabel("Set Posture to start the recording", main_widget)
+        self.on_posture_combobox = QComboBox(self)
+        self.on_posture_combobox.addItem("None")
+        self.on_posture_combobox.addItem("Victory")
+        self.on_posture_combobox.addItem("Pointing_Up")
+        self.on_posture_combobox.addItem("Thumb_Down")
+        self.on_posture_combobox.addItem("Thumb_Up")
+        self.on_posture_combobox.addItem("Closed_Fist")
+        self.on_posture_combobox.addItem("Open_Palm")
+        self.on_posture_combobox.activated[str].connect(self.on_posture_selected)
         
-
-        self.posture_combobox.activated[str].connect(self.on_posture_selected)
+        # Stop postures
+        self.off_posture_label = QLabel("Set Posture to stop the recording", main_widget)
+        self.off_posture_combobox = QComboBox(self)
+        self.off_posture_combobox.addItem("None")
+        self.off_posture_combobox.addItem("Victory")
+        self.off_posture_combobox.addItem("Pointing_Up")
+        self.off_posture_combobox.addItem("Thumb_Down")
+        self.off_posture_combobox.addItem("Thumb_Up")
+        self.off_posture_combobox.addItem("Closed_Fist")
+        self.off_posture_combobox.addItem("Open_Palm")
+        self.off_posture_combobox.activated[str].connect(self.off_posture_selected)
 
         # Remove these settings for now:
 
@@ -81,8 +95,13 @@ class GUI(QMainWindow):
         # settings_layout.addWidget(x_label)
         # settings_layout.addWidget(self.height_input)
 
-        layout.addWidget(self.posture_label)
-        layout.addWidget(self.posture_combobox)
+        # Posture selections                 
+        layout.addWidget(self.on_posture_label)
+        layout.addWidget(self.on_posture_combobox)
+        layout.addWidget(self.off_posture_label)
+        layout.addWidget(self.off_posture_combobox)
+
+
         layout.addWidget(self.camera_status_label)
         layout.addWidget(self.folder_path_label)
         layout.addWidget(folder_button)
@@ -92,7 +111,7 @@ class GUI(QMainWindow):
         layout.addWidget(dark_mode)
         layout.addWidget(hide_button)
 
-        self.setFixedSize(400, 350)
+        self.setFixedSize(400, 400)
 
         # Tray settings:
 
@@ -108,12 +127,14 @@ class GUI(QMainWindow):
 
         self.show()
 
+    # select the folder to save to.
     def select_folder(self):
         folder_path = QFileDialog.getExistingDirectory()
         if folder_path:
             self.folder_path_label.setText("Selected Folder: " + folder_path)
             self.folder_path = folder_path
 
+    # toggle the camera flag to indicate wheter or not the camera will be on.
     def toggle_camera(self):
         self.camera_hidden = not self.camera_hidden
         if self.camera_hidden:
@@ -121,14 +142,18 @@ class GUI(QMainWindow):
         else:
             self.camera_status_label.setText("Camera Status: Visible")
 
+    # update and take input from posture selection input boxes.
     def on_posture_selected(self):
-        self.posture = self.posture_combobox.currentText()
+        self.on_posture = self.on_posture_combobox.currentText()
+    def off_posture_selected(self):
+        self.off_posture = self.off_posture_combobox.currentText()
 
+    # With all settings set above, submit and start recording / begin recording
     def submit(self):
         # Hide application
         self.hide()
         # Call camera function:
-        self.backend.capture_frames(self.posture, not self.camera_hidden, self.folder_path)
+        self.backend.capture_frames(self.on_posture,self.off_posture,not self.camera_hidden, self.folder_path)
         # Close application after captured posture:
         QApplication.quit()
 
@@ -144,6 +169,7 @@ class GUI(QMainWindow):
             self.dark_mode_checker = True
         self.setStyleSheet(css)
 
+    # Showes the help tab with the instructions written inside.
     def show_help(self):
         help_window = QDialog(self)
         help_window.setWindowTitle("Help")
