@@ -1,10 +1,12 @@
 import sys
 from PyQt5.QtWidgets import QApplication, QMainWindow, QLabel, QPushButton, QFileDialog, QLineEdit, QVBoxLayout, QWidget, QHBoxLayout, QTextEdit, QSystemTrayIcon, QMenu, QDialog
-from PyQt5 import QtCore  # Import QtCore module
+from PyQt5 import QtCore,QtGui
+from PyQt5.QtGui import QIcon
 
 # Variable to track the camera status
 camera_hidden = False
 dark_mode_checker = False
+icon = QIcon("/utils/icon.png")
 
 # Function to toggle the camera status
 def toggle_camera():
@@ -38,13 +40,13 @@ def dark_mode_function():
         dark_mode_checker = True
     app.setStyleSheet(css)
 
-# Function to show the Help window
+# Function to show the Help window 
 def show_help():
     help_window = QDialog(main_window)
     help_window.setWindowTitle("Help")
     help_window.setGeometry(200, 200, 400, 300)
     
-    help_text = QTextEdit("This is the help text. You can add your help information here.")
+    help_text = QTextEdit("Here is how to use Posture recorder: \n hi")
     help_text.setReadOnly(True)
     
     close_button = QPushButton("Close", help_window)
@@ -59,7 +61,7 @@ def show_help():
 
 app = QApplication(sys.argv)
 main_window = QMainWindow()
-main_window.setWindowTitle("Video Recording App")
+main_window.setWindowTitle("Posture Recording")
 
 # Set the background color of the main window
 # main_window.setStyleSheet("background-color: #333;")  # Use your preferred background color
@@ -132,12 +134,13 @@ layout.addWidget(help_button)
 layout.addWidget(dark_mode)
 layout.addWidget(hide_button)
 
-
+  
 # Set the window size and disable full-screen
 main_window.setFixedSize(400, 350)
 
 # Create a system tray icon
 tray_icon = QSystemTrayIcon(main_window)
+# tray_icon.setIcon(icon)
 tray_icon.setIcon(main_window.windowIcon())
 tray_icon.setVisible(True)
 

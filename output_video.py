@@ -5,7 +5,7 @@ from utils import recognizer
 from utils.variables import *
 
 # Initialize MediaPipe Hands model
-recognizer = recognizer.recognizer()
+recognizer_ = recognizer.recognizer()
 
 try:
     c = cv.VideoCapture(0, cv.CAP_DSHOW) # Capture the default camera without displaying the camera.
@@ -32,7 +32,7 @@ while True:
     # implement frame settings:
     if frame_counter == frame_setter:
         frame_counter = 0
-        gesture_recognition_result = recognizer.recognize(mp_rgb_frame)
+        gesture_recognition_result = recognizer_.recognize(mp_rgb_frame)
         if gesture_recognition_result.gestures and gesture_recognition_result.gestures[0]:
             # Grab Posture and handness names:
             posture = gesture_recognition_result.gestures[0][0].category_name
