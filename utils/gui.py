@@ -19,7 +19,7 @@ class GUI(QMainWindow):
         self.backend = backend
         self.init_ui()
 
-        self.help_text = "Here is the instruction on how to use the Posture Recording Software,<br> Set the start Posture and stop posture from the list above.<br> Then after that choose whether or not you want the camera to show/not show on the screen.<br> Then you can select the folder where you want to save the recording to. It will be saved in that directory as output.avi.<br><br> Once all that is done, click start and hide application and you can let your camera record when you use the set start posture and end with your set stop posture. After stop posture is presented the application will end<br><br> Here is what all postures means:<br> - Victory: Its basically a scissors from rock paper scissors pointing towards the sky<br> - Thumbs_up, thumbs_down: Pointing your thumb in different directions up or down.<br> - pointing_up, using your index finger to point to the top.<br> - open palmn or close fist: open your hand like paper from rock paper scissors. or close your hand and make a fist.<br><br> Be-aware that your camera LED lights may be turned on, in which you have to turn it off in your own hardware settings. This is not yet implemented in this beta phase of software. btw if the cam is shown on screen you can also press q to quit instead<br><br>If you set any posture to none, it will ignore those posture"
+        self.help_text = "Here is the instruction on how to use the Posture Recording Software,<br> Set the start Posture and stop posture from the list above.<br> Then after that choose whether or not you want the camera to show/not show on the screen.<br> Then you can select the folder where you want to save the recording to. It will be saved in that directory as output.avi.<br><br> Once all that is done, click start and hide application and you can let your camera record when you use the set start posture and end with your set stop posture. After stop posture is presented the application will end<br><br> Here is what all postures means:<br> - Victory: Its basically a scissors from rock paper scissors pointing towards the sky<br> - Thumbs_up, thumbs_down: Pointing your thumb in different directions up or down.<br> - pointing_up, using your index finger to point to the top.<br> - open palmn or close fist: open your hand like paper from rock paper scissors. or close your hand and make a fist.<br><br> Be-aware that your camera LED lights may be turned on, in which you have to turn it off in your own hardware settings. This is not yet implemented in this beta phase of software. btw if the cam is shown on screen you can also press q to quit instead<br><br>If you set any posture to none, it will ignore those posture.<br> If you are unsure of what the camera posture do, you can test them on the test cam button below."
 
 
     # Initialize UI settings
@@ -172,6 +172,10 @@ class GUI(QMainWindow):
             self.dark_mode_checker = True
         self.setStyleSheet(css)
 
+    # Test camera postures.
+    def test_camera(self):
+        self.backend.posture_test_mode()
+
     # Showes the help tab with the instructions written inside.
     def show_help(self):
         help_window = QDialog(self)
@@ -181,8 +185,18 @@ class GUI(QMainWindow):
         help_text.setReadOnly(True)
         close_button = QPushButton("Close", help_window)
         close_button.clicked.connect(help_window.close)
+
+        # Create the "Test Cam" button
+        test_cam_button = QPushButton("Test Cam", help_window)
+        # Connect it to a function that tests the camera
+        test_cam_button.clicked.connect(self.test_camera)
+
         layout = QVBoxLayout()
         layout.addWidget(help_text)
         layout.addWidget(close_button)
+
+        # Add the "Test Cam" button to the layout
+        layout.addWidget(test_cam_button)
+
         help_window.setLayout(layout)
         help_window.exec_()
