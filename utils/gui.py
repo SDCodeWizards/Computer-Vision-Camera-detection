@@ -19,6 +19,9 @@ class GUI(QMainWindow):
         self.backend = backend
         self.init_ui()
 
+        self.help_text = "Here is the instruction on how to use the Posture Recording Software,<br> Set the start Posture and stop posture from the list above.<br> Then after that choose whether or not you want the camera to show/not show on the screen.<br> Then you can select the folder where you want to save the recording to. It will be saved in that directory as output.avi.<br><br> Once all that is done, click start and hide application and you can let your camera record when you use the set start posture and end with your set stop posture. After stop posture is presented the application will end<br><br> Here is what all postures means:<br> - Victory: Its basically a scissors from rock paper scissors pointing towards the sky<br> - Thumbs_up, thumbs_down: Pointing your thumb in different directions up or down.<br> - pointing_up, using your index finger to point to the top.<br> - open palmn or close fist: open your hand like paper from rock paper scissors. or close your hand and make a fist.<br><br> Be-aware that your camera LED lights may be turned on, in which you have to turn it off in your own hardware settings. This is not yet implemented in this beta phase of software. btw if the cam is shown on screen you can also press q to quit instead<br>"
+
+
     # Initialize UI settings
     def init_ui(self):
         with open("utils/graphics/style.css", "r") as css_file:
@@ -173,8 +176,8 @@ class GUI(QMainWindow):
     def show_help(self):
         help_window = QDialog(self)
         help_window.setWindowTitle("Help")
-        help_window.setGeometry(200, 200, 400, 300)
-        help_text = QTextEdit("Here is how to use Posture recorder: \n hi")
+        help_window.setGeometry(200, 200, 600, 400)
+        help_text = QTextEdit(self.help_text)
         help_text.setReadOnly(True)
         close_button = QPushButton("Close", help_window)
         close_button.clicked.connect(help_window.close)
