@@ -15,11 +15,11 @@ class GUI(QMainWindow):
         self.on_posture = "None"
         self.off_posture = "None"
         
-
         super().__init__()
         self.backend = backend
         self.init_ui()
 
+    # Initialize UI settings
     def init_ui(self):
         with open("utils/graphics/style.css", "r") as css_file:
             css = css_file.read()
@@ -132,7 +132,7 @@ class GUI(QMainWindow):
         folder_path = QFileDialog.getExistingDirectory()
         if folder_path:
             self.folder_path_label.setText("Selected Folder: " + folder_path)
-            self.folder_path = folder_path
+            self.folder_path = folder_path + "/"
 
     # toggle the camera flag to indicate wheter or not the camera will be on.
     def toggle_camera(self):

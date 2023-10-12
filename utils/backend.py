@@ -12,10 +12,22 @@ class Backend:
         self.on_recording = False
 
     def capture_frames(self, on_posture ,off_posture, cam_on, destination):
+
+        text = ""
+        coordinates = (100,100)
+        font = cv.FONT_HERSHEY_SIMPLEX
+        fontScale = 1
+        color = (255,0,255)
+        thickness = 2
+
+        break_ = False
+        break_frame = 0
+        BREAK_TIME = 50
+
         # Cam setups
         self.camera = cv.VideoCapture(0, cv.CAP_DSHOW)
         self.camera.set(cv.CAP_PROP_FPS, FPS)
-        self.out = cv.VideoWriter(destination + '/output.avi', cv.VideoWriter_fourcc(*'XVID'), FPS, (640, 480))
+        self.out = cv.VideoWriter(destination + 'output.avi', cv.VideoWriter_fourcc(*'XVID'), FPS, (640, 480))
 
         # Check for if there is a start recording:
         if on_posture == "None":
@@ -37,11 +49,17 @@ class Backend:
                 if gesture_recognition_result.gestures and gesture_recognition_result.gestures[0]:
                     self.posture = gesture_recognition_result.gestures[0][0].category_name
                     self.handness = gesture_recognition_result.handedness[0][0].category_name
-                    # Compare detected posture with our settings
-                    if self.posture == on_posture:
-                        self.on_recording = True
-                    if self.posture == off_posture and self.on_recording == True:
-                        break
+            
+            # Compare detected posture with our settings
+            if self.posture == on_posture:
+                text = "On Posture: " + on_posture + "Detected"
+                frame = cv.putText(frame, text, coordinates, font, fontScale, color, thickness, cv.LINE_AA)
+                self.on_recording = True
+            # Delay the break for a little bit.
+            if break_:
+                break_frame += 1
+                if break_frame == BREAK_TIME:
+                    break
             # Increases frame counters
             self.frame_counter += 1
 
@@ -51,6 +69,12 @@ class Backend:
             # To enable force quit of application
             if cv.waitKey(1) & 0xFF == ord("q"):
                 break
+            # Check if posture matches, and if it does, next couple frame we end the loop
+            if self.posture == off_posture and self.on_recording == True:
+                # print("Hit")
+                text = "Off Posture: " + on_posture + "Detected"
+                frame = cv.putText(frame, text, coordinates, font, fontScale, color, thickness, cv.LINE_AA)
+                break_ = True
             # Flag to enable user to see their recordings.
             if cam_on:
                 # Display the frame with imshow.
