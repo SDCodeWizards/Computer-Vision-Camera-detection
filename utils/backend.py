@@ -41,53 +41,46 @@ class Backend:
                 break
             rgb_frame = cv.cvtColor(frame, cv.COLOR_BGR2RGB)
             mp_rgb_frame = mp.Image(image_format=mp.ImageFormat.SRGB, data=rgb_frame)
-            # Frame settings
+            # Frame / gesture settings
             if self.frame_counter == frame_setter:
                 self.frame_counter = 0
                 gesture_recognition_result = self.recognizer.recognize(mp_rgb_frame)
-                # If a gesture is detected
                 if gesture_recognition_result.gestures and gesture_recognition_result.gestures[0]:
                     self.posture = gesture_recognition_result.gestures[0][0].category_name
                     self.handness = gesture_recognition_result.handedness[0][0].category_name
             
-            # Compare detected posture with our settings
-            if self.posture == on_posture:
-                text = "On Posture: " + on_posture + "Detected"
-                frame = cv.putText(frame, text, coordinates, font, fontScale, color, thickness, cv.LINE_AA)
-                self.on_recording = True
-            # Delay the break for a little bit.
+            # Posture frame counters and break counters & break
+            self.frame_counter += 1
             if break_:
                 break_frame += 1
                 if break_frame == BREAK_TIME:
                     break
-            # Increases frame counters
-            self.frame_counter += 1
 
-            # Only record if flag is on
+            # Record video for user.
             if self.on_recording:
                 self.out.write(frame)
-            # To enable force quit of application
-            if cv.waitKey(1) & 0xFF == ord("q"):
-                break
-            # Check if posture matches, and if it does, next couple frame we end the loop
+
+            # Compare detected posture with our settings
+            if self.posture == on_posture and on_posture != "None":
+                text = "On Posture: " + on_posture + "Detected"
+                frame = cv.putText(frame, text, coordinates, font, fontScale, color, thickness, cv.LINE_AA)
+                self.on_recording = True
             if self.posture == off_posture and self.on_recording == True:
                 # print("Hit")
-                text = "Off Posture: " + on_posture + "Detected"
+                text = "Off Posture: " + off_posture + "Detected"
                 frame = cv.putText(frame, text, coordinates, font, fontScale, color, thickness, cv.LINE_AA)
                 break_ = True
-            # Flag to enable user to see their recordings.
+
+            # Display cam to user
             if cam_on:
                 # Display the frame with imshow.
                 cv.imshow("Camera Feed", frame)
+
+            # To enable force quit of application
+            if cv.waitKey(1) & 0xFF == ord("q"):
+                break
 
         # Releases all programs
         self.camera.release()
         self.out.release()
         cv.destroyAllWindows()
-
-# if cycle:
-#     cv.putText(frame, self.posture, (100, 100), cv.FONT_HERSHEY_SIMPLEX, 1, (255, 0, 0), 3, cv.LINE_AA)
-#     cv.putText(frame, self.handness, (300, 100), cv.FONT_HERSHEY_SIMPLEX, 1, (255, 0, 255), 3, cv.LINE_AA)
-#     for landmarks in gesture_recognition_result.hand_landmarks[0]:
-#         x, y = int(landmarks.x * frame.shape[1]), int(landmarks.y * frame.shape[0])
-#         cv.circle(frame, (x, y), 5, (0, 255, 0), -1)
