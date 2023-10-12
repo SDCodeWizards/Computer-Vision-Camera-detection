@@ -60,7 +60,7 @@ class GUI(QMainWindow):
         # Start postures
         self.on_posture_label = QLabel("Set Posture to start the recording", main_widget)
         self.on_posture_combobox = QComboBox(self)
-        self.on_posture_combobox.addItem("None")
+        self.on_posture_combobox.addItem("No_Posture")
         self.on_posture_combobox.addItem("Victory")
         self.on_posture_combobox.addItem("Pointing_Up")
         self.on_posture_combobox.addItem("Thumb_Down")
@@ -72,7 +72,7 @@ class GUI(QMainWindow):
         # Stop postures
         self.off_posture_label = QLabel("Set Posture to stop the recording", main_widget)
         self.off_posture_combobox = QComboBox(self)
-        self.off_posture_combobox.addItem("None")
+        self.off_posture_combobox.addItem("No_Posture")
         self.off_posture_combobox.addItem("Victory")
         self.off_posture_combobox.addItem("Pointing_Up")
         self.off_posture_combobox.addItem("Thumb_Down")

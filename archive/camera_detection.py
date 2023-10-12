@@ -4,7 +4,6 @@ import mediapipe as mp
 from utils.tools import recognizer
 from utils.tools.variables import *
 
-
 # Initialize MediaPipe Hands model
 recognizer = recognizer.recognizer()
 
