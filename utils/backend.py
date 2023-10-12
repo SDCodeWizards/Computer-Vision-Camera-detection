@@ -121,10 +121,6 @@ class Backend:
             if cycle:
                 cv.putText(frame, posture, (100,100), cv.FONT_HERSHEY_SIMPLEX, 1,(255, 0, 0), 3, cv.LINE_AA)
                 cv.putText(frame, handness, (300,100), cv.FONT_HERSHEY_SIMPLEX, 1,(255, 0, 255), 3, cv.LINE_AA)
-                # Draw landmarks on the frame(green dots) 
-                # for landmarks in gesture_recognition_result.hand_landmarks[0]:
-                #     x, y = int(landmarks.x * frame.shape[1]), int(landmarks.y * frame.shape[0])
-                #     cv.circle(frame, (x, y), 5, (0, 255, 0), -1)
             frame_counter += 1
             # Display the frame with imshow.
             cv.imshow("Camera Feed", frame)
