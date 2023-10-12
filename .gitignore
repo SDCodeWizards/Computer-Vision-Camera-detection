@@ -5,3 +5,4 @@ utils/__pycache__/settings.cpython-311.pyc
 output.avi
 utils/__pycache__/recognizer.cpython-311.pyc
 *.pyc
+utils/__pycache__/gui.cpython-311.pyc
