@@ -3,7 +3,7 @@ import pathlib
 
 
 def recognizer():
-    model_path = str(pathlib.Path(__file__).parent.resolve()) + "/model/gesture_recognizer.task"
+    model_path = str(pathlib.Path(__file__).parent.resolve()) + "/../model/gesture_recognizer.task"
     BaseOptions = mp.tasks.BaseOptions
     GestureRecognizer = mp.tasks.vision.GestureRecognizer
     GestureRecognizerOptions = mp.tasks.vision.GestureRecognizerOptions

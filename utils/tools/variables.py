@@ -9,3 +9,6 @@ cycle = False
 # Constants
 FPS = 30 # For recorded images.
 posture = ""
+
+
+camera_hidden = False
