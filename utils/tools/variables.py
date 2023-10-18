@@ -5,3 +5,8 @@ box_location = [] # Stores as (initial_x, initial_y, final_x, final_y, name_of_p
 total_box_amounts = 1 # Amount on how many boxes to display on screen.
 frame_setter = 1 # Set how many frames
 cycle = False
+
+# Constants
+FPS = 30 # For recorded images.
+posture = ""
+camera_hidden = False
